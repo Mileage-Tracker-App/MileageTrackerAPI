@@ -1,79 +1,29 @@
 using Microsoft.EntityFrameworkCore;
-using MileageTrackerAPI.Models;
+using Microsoft.OpenApi.Models;
 
-namespace MileageTrackerAPI;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+// Add services to the container.
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(c =>
 {
-    public static void Main(string[] args)
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MileageTrackerAPI", Version = "v1" });
+});
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddAuthorization();
-        builder.Services.AddOpenApi();
-
-        builder.Services.AddDbContext<MileageDbContext>(options =>
-            options.UseMySql(
-                builder.Configuration.GetConnectionString("DefaultConnection"),
-                new MySqlServerVersion(new Version(10, 5))
-            )
-        );
-        
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-        });
-        
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            options.ListenAnyIP(80); // Replace 5219 with your desired port if needed
-        });
-
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.UseCors("AllowAll"); // Add this before endpoint mappings
-
-        app.MapPost("/sync/create", async (MileageDbContext db) =>
-        {
-            var code = Guid.NewGuid().ToString().Substring(0, 6);
-            var session = new SyncSession { LinkingCode = code, CreatedAt = DateTime.UtcNow };
-            db.SyncSessions.Add(session);
-            await db.SaveChangesAsync();
-            return Results.Ok(new { session.Id, session.LinkingCode });
-        });
-        
-        app.MapGet("/logs/all", async (MileageDbContext db) =>
-        {
-            var logs = await db.MileageLogs.ToListAsync();
-            return Results.Ok(logs);
-        });
-
-        app.MapPost("/sync/join", async (string code, MileageDbContext db) =>
-        {
-            var session = await db.SyncSessions.FirstOrDefaultAsync(s => s.LinkingCode == code);
-            if (session == null) return Results.NotFound();
-            return Results.Ok(session);
-        });
-
-        app.MapPost("/logs/sync", async (MileageLog log, MileageDbContext db) =>
-        {
-            db.MileageLogs.Add(log);
-            await db.SaveChangesAsync();
-            return Results.Ok(log);
-        });
-
-        app.Run();
-    }
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MileageTrackerAPI v1");
+    });
 }
+
+app.UseHttpsRedirection();
+app.UseAuthorization();
+app.MapControllers();
+
+app.Run();
