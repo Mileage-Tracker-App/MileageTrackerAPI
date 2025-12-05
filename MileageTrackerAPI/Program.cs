@@ -1,79 +1,40 @@
+using System.Configuration;
+using MileageTrackerAPI.Data;
+using MileageTrackerAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using MileageTrackerAPI.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
-namespace MileageTrackerAPI;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 21))));
+
+builder.Services.AddOpenApi();
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+app.Urls.Add("http://localhost:8080");
+
+if (app.Environment.IsDevelopment())
 {
-    public static void Main(string[] args)
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
     {
-        var builder = WebApplication.CreateBuilder(args);
-
-        builder.Services.AddAuthorization();
-        builder.Services.AddOpenApi();
-
-        builder.Services.AddDbContext<MileageDbContext>(options =>
-            options.UseMySql(
-                builder.Configuration.GetConnectionString("DefaultConnection"),
-                new MySqlServerVersion(new Version(10, 5))
-            )
-        );
-        
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
-        });
-        
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            options.ListenAnyIP(80); // Replace 5219 with your desired port if needed
-        });
-
-        var app = builder.Build();
-
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-        app.UseCors("AllowAll"); // Add this before endpoint mappings
-
-        app.MapPost("/sync/create", async (MileageDbContext db) =>
-        {
-            var code = Guid.NewGuid().ToString().Substring(0, 6);
-            var session = new SyncSession { LinkingCode = code, CreatedAt = DateTime.UtcNow };
-            db.SyncSessions.Add(session);
-            await db.SaveChangesAsync();
-            return Results.Ok(new { session.Id, session.LinkingCode });
-        });
-        
-        app.MapGet("/logs/all", async (MileageDbContext db) =>
-        {
-            var logs = await db.MileageLogs.ToListAsync();
-            return Results.Ok(logs);
-        });
-
-        app.MapPost("/sync/join", async (string code, MileageDbContext db) =>
-        {
-            var session = await db.SyncSessions.FirstOrDefaultAsync(s => s.LinkingCode == code);
-            if (session == null) return Results.NotFound();
-            return Results.Ok(session);
-        });
-
-        app.MapPost("/logs/sync", async (MileageLog log, MileageDbContext db) =>
-        {
-            db.MileageLogs.Add(log);
-            await db.SaveChangesAsync();
-            return Results.Ok(log);
-        });
-
-        app.Run();
-    }
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        options.RoutePrefix = string.Empty;
+    });
 }
+
+app.UseHttpsRedirection();
+app.MapControllers();
+
+app.Run();
