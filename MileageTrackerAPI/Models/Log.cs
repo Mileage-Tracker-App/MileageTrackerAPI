@@ -4,8 +4,10 @@ public class Log
 {
     public int Id { get; set; }
     public string Vehicle { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public DateTime StartDate { get; set; }
-    public Dictionary<int, LogItem> Logs { get; set; } = new Dictionary<int, LogItem>();
-    public int NumberOfLogs => Logs.Count;
-    public double Miles => Logs.Count > 0 ? Logs[Logs.Count].Miles : 0;
+    public int SessionId { get; set; }
+    public List<LogItem> LogItems { get; set; } = new List<LogItem>();
+    public int NumberOfLogItems => LogItems.Count;
+    public double TotalMiles => LogItems.Sum(item => item.Miles);
 }

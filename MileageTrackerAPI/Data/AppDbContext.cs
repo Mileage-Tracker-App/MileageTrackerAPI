@@ -10,4 +10,22 @@ public class AppDbContext : DbContext
 
     public DbSet<Log> Logs { get; set; }
     public DbSet<Session> Sessions { get; set; }
+    public DbSet<LogItem> LogItems { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Log>()
+            .HasOne<Session>()
+            .WithMany(s => s.Logs)
+            .HasForeignKey(l => l.SessionId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<LogItem>()
+            .HasOne<Log>()
+            .WithMany(l => l.LogItems)
+            .HasForeignKey(li => li.LogId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }

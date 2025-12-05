@@ -1,6 +1,5 @@
 using System.Configuration;
 using MileageTrackerAPI.Data;
-using MileageTrackerAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using MileageTrackerAPI.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
