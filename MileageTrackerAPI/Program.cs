@@ -17,7 +17,14 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Mileage Tracker API",
+        Version = "v1"
+    });
+});
 
 var app = builder.Build();
 app.Urls.Add("http://localhost:8080");

@@ -28,7 +28,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpGet("{sessionId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetSession(int sessionId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> GetSession([FromRoute] int sessionId)
         {
             var session = await _db.Sessions
                 .Include(s => s.Logs)
@@ -53,7 +53,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpDelete("{sessionId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteSession(int sessionId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteSession([FromRoute] int sessionId)
         {
             var existingSession = await _db.Sessions.FindAsync(sessionId);
             if (existingSession == null)
@@ -66,21 +66,6 @@ namespace MileageTrackerAPI.Controllers
             return Results.Ok("Session deleted successfully");
         }
 
-        [HttpGet("{sessionId}/logs")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetSessionLogs(int sessionId)
-        {
-            var session = await _db.Sessions.FindAsync(sessionId);
-            if (session == null)
-            {
-                return Results.NotFound("Session not found");
-            }
 
-            var logs = await _db.Logs
-                .Include(l => l.LogItems)
-                .Where(l => l.SessionId == sessionId)
-                .ToListAsync();
-
-            return Results.Ok(logs);
-        }
     }
 }

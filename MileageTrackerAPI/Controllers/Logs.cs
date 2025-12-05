@@ -18,7 +18,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogs(int sessionId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogs([FromRoute] int sessionId)
         {
             var session = await _db.Sessions.FindAsync(sessionId);
             if (session == null)
@@ -35,7 +35,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpGet("{logId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetLog(int sessionId, int logId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> GetLog([FromRoute] int sessionId, [FromRoute] int logId)
         {
             var log = await _db.Logs
                 .Include(l => l.LogItems)
@@ -50,7 +50,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<Microsoft.AspNetCore.Http.IResult> CreateLog(int sessionId, [FromBody] Log log)
+        public async Task<Microsoft.AspNetCore.Http.IResult> CreateLog([FromRoute] int sessionId, [FromBody] Log log)
         {
             var session = await _db.Sessions.FindAsync(sessionId);
             if (session == null)
@@ -65,7 +65,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpPut("{logId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> UpdateLog(int sessionId, int logId, [FromBody] Log log)
+        public async Task<Microsoft.AspNetCore.Http.IResult> UpdateLog([FromRoute] int sessionId, [FromRoute] int logId, [FromBody] Log log)
         {
             var existingLog = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
@@ -84,7 +84,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpDelete("{logId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteLog(int sessionId, int logId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteLog([FromRoute] int sessionId, [FromRoute] int logId)
         {
             var existingLog = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);

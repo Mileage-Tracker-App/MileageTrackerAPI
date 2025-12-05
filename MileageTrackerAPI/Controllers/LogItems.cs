@@ -18,7 +18,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogItems(int sessionId, int logId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogItems([FromRoute] int sessionId, [FromRoute] int logId)
         {
             var log = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
@@ -36,7 +36,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpGet("{itemId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogItem(int sessionId, int logId, int itemId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> GetLogItem([FromRoute] int sessionId, [FromRoute] int logId, [FromRoute] int itemId)
         {
             var log = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
@@ -58,7 +58,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<Microsoft.AspNetCore.Http.IResult> CreateLogItem(int sessionId, int logId, [FromBody] LogItem logItem)
+        public async Task<Microsoft.AspNetCore.Http.IResult> CreateLogItem([FromRoute] int sessionId, [FromRoute] int logId, [FromBody] LogItem logItem)
         {
             var log = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
@@ -75,7 +75,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpPut("{itemId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> UpdateLogItem(int sessionId, int logId, int itemId, [FromBody] LogItem logItem)
+        public async Task<Microsoft.AspNetCore.Http.IResult> UpdateLogItem([FromRoute] int sessionId, [FromRoute] int logId, [FromRoute] int itemId, [FromBody] LogItem logItem)
         {
             var log = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
@@ -105,7 +105,7 @@ namespace MileageTrackerAPI.Controllers
         }
 
         [HttpDelete("{itemId}")]
-        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteLogItem(int sessionId, int logId, int itemId)
+        public async Task<Microsoft.AspNetCore.Http.IResult> DeleteLogItem([FromRoute] int sessionId, [FromRoute] int logId, [FromRoute] int itemId)
         {
             var log = await _db.Logs
                 .FirstOrDefaultAsync(l => l.Id == logId && l.SessionId == sessionId);
