@@ -1357,11 +1357,174 @@ mileagetracker|schema||mileagetracker|localhost|UPDATE|G</Grants>
       <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
       <Current>1</Current>
       <LastIntrospectionLevel>3</LastIntrospectionLevel>
-      <LastIntrospectionLocalTimestamp>2025-12-14.01:03:37</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-12-14.08:18:45</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
     </schema>
     <user id="556" parent="1" name="mileagetracker">
       <Host>localhost</Host>
     </user>
+    <table id="557" parent="555" name="__efmigrationshistory">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    </table>
+    <table id="558" parent="555" name="logitems">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    </table>
+    <table id="559" parent="555" name="logs">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    </table>
+    <table id="560" parent="555" name="sessions">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_uca1400_ai_ci</CollationName>
+    </table>
+    <column id="561" parent="557" name="MigrationId">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>varchar(150)|0s</StoredType>
+    </column>
+    <column id="562" parent="557" name="ProductVersion">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>varchar(32)|0s</StoredType>
+    </column>
+    <index id="563" parent="557" name="PRIMARY">
+      <ColNames>MigrationId</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="564" parent="557" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="565" parent="558" name="Id">
+      <AutoIncrement>1</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>int(11)|0s</StoredType>
+    </column>
+    <column id="566" parent="558" name="Date">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>datetime(6)|0s</StoredType>
+    </column>
+    <column id="567" parent="558" name="Miles">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>double|0s</StoredType>
+    </column>
+    <column id="568" parent="558" name="Description">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StoredType>longtext|0s</StoredType>
+    </column>
+    <column id="569" parent="558" name="IsGas">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StoredType>tinyint(1)|0s</StoredType>
+    </column>
+    <column id="570" parent="558" name="Gallons">
+      <Position>6</Position>
+      <StoredType>double|0s</StoredType>
+    </column>
+    <column id="571" parent="558" name="PricePerGallon">
+      <Position>7</Position>
+      <StoredType>double|0s</StoredType>
+    </column>
+    <column id="572" parent="558" name="LogId">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>int(11)|0s</StoredType>
+    </column>
+    <foreign-key id="573" parent="558" name="FK_LogItems_Logs_LogId">
+      <ColNames>LogId</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>Id</RefColNames>
+      <RefTableName>logs</RefTableName>
+    </foreign-key>
+    <index id="574" parent="558" name="PRIMARY">
+      <ColNames>Id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="575" parent="558" name="IX_LogItems_LogId">
+      <ColNames>LogId</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="576" parent="558" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="577" parent="559" name="Id">
+      <AutoIncrement>1</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>int(11)|0s</StoredType>
+    </column>
+    <column id="578" parent="559" name="Vehicle">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>longtext|0s</StoredType>
+    </column>
+    <column id="579" parent="559" name="Description">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>longtext|0s</StoredType>
+    </column>
+    <column id="580" parent="559" name="StartDate">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StoredType>datetime(6)|0s</StoredType>
+    </column>
+    <column id="581" parent="559" name="SessionId">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StoredType>int(11)|0s</StoredType>
+    </column>
+    <foreign-key id="582" parent="559" name="FK_Logs_Sessions_SessionId">
+      <ColNames>SessionId</ColNames>
+      <OnDelete>cascade</OnDelete>
+      <RefColNames>Id</RefColNames>
+      <RefTableName>sessions</RefTableName>
+    </foreign-key>
+    <index id="583" parent="559" name="PRIMARY">
+      <ColNames>Id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="584" parent="559" name="IX_Logs_SessionId">
+      <ColNames>SessionId</ColNames>
+      <Type>btree</Type>
+    </index>
+    <key id="585" parent="559" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="586" parent="560" name="Id">
+      <AutoIncrement>2</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>int(11)|0s</StoredType>
+    </column>
+    <index id="587" parent="560" name="PRIMARY">
+      <ColNames>Id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="588" parent="560" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
   </database-model>
 </dataSource>
