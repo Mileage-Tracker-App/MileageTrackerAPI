@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MileageTrackerAPI.Models;
 
 namespace MileageTrackerAPI.Data
 {
