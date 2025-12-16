@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPO_PATH="/home/aric/MileageTrackerAPI"
+REPO_PATH="/root/MileageTrackerAPI"
 API_PATH="$REPO_PATH/MileageTrackerAPI"
 CHECK_INTERVAL=10
 
